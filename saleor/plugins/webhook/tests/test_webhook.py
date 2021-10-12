@@ -16,7 +16,7 @@ from ....account.notifications import (
     send_account_confirmation,
 )
 from ....app.models import App
-from ....core.models import EventPayload, EventTask
+from ....core.models import EventDelivery, EventPayload
 from ....core.notifications import get_site_context
 from ....core.notify_events import NotifyEventType
 from ....core.utils.json_serializer import CustomJsonEncoder
@@ -530,7 +530,7 @@ def test_create_event_payload_reference(
     expected_data = json.dumps(serialize("json", [order_with_lines]))
     event_payload = EventPayload.objects.create(payload=expected_data)
     trigger_webhooks_for_event(WebhookEventType.ORDER_CREATED, event_payload.id)
-    event_payload_reference = EventTask.objects.first()
+    event_payload_reference = EventDelivery.objects.first()
 
     assert event_payload_reference.webhook == webhook
     assert event_payload_reference.event_type == WebhookEventType.ORDER_CREATED
@@ -564,7 +564,7 @@ def test_create_event_payload_reference_with_error(
     expected_data = json.dumps(serialize("json", [order_with_lines]))
     event_payload = EventPayload.objects.create(payload=expected_data)
     trigger_webhooks_for_event(WebhookEventType.ORDER_CREATED, event_payload.id)
-    event_payload_reference = EventTask.objects.first()
+    event_payload_reference = EventDelivery.objects.first()
 
     assert event_payload_reference.webhook == webhook
     assert event_payload_reference.event_type == WebhookEventType.ORDER_CREATED
